@@ -1,34 +1,37 @@
-﻿using System;
+﻿using Boo.Lang;
 using UnityEngine;
 
 public class ChalkWriting : MonoBehaviour
 {
-    private int vertice = 0;
     private Transform chalkTip;
-    public Color color = Color.white;
-    public int drawRate = 500;
-    public int nextDraw = DateTime.Now.Millisecond;
+    private List<Vector3> points = new List<Vector3>();
 
     // Start is called before the first frame update
     void Start()
     {
         chalkTip = gameObject.transform.GetChild(0);
         LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.startWidth = lineRenderer.endWidth = 0.15f;
-        lineRenderer.startColor = lineRenderer.endColor = color;
+        lineRenderer.startWidth = lineRenderer.endWidth = 0.05f;
         lineRenderer.useWorldSpace = true;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (DateTime.Now.Millisecond > nextDraw)
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        points.Add(new Vector3(chalkTip.position.x, chalkTip.position.y, chalkTip.position.z));
+        lineRenderer.positionCount = points.Count;
+        lineRenderer.SetPositions(points.ToArray());
+    }
+
+    private void OnEnable()
+    {
+        if (gameObject.GetComponent<LineRenderer>())
         {
-            nextDraw = DateTime.Now.Millisecond + drawRate;
             LineRenderer lineRenderer = GetComponent<LineRenderer>();
-            // Debug.Log(chalkTip.position.x + " " + chalkTip.position.y + " " + chalkTip.position.z);
-            lineRenderer.SetPosition(vertice++, new Vector3(chalkTip.position.x, chalkTip.position.y, chalkTip.position.z));
+            lineRenderer.positionCount = 0;
         }
+
+        points = new List<Vector3>();
     }
 }
