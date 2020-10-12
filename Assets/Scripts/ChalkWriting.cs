@@ -1,10 +1,12 @@
 ﻿using Boo.Lang;
+using System;
 using UnityEngine;
 
 public class ChalkWriting : MonoBehaviour
 {
     private Transform chalkTip;
     private List<Vector3> points = new List<Vector3>();
+    private Color color = Color.black;
 
     // Start is called before the first frame update
     void Start()
@@ -12,6 +14,8 @@ public class ChalkWriting : MonoBehaviour
         chalkTip = gameObject.transform.GetChild(0);
         LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.startWidth = lineRenderer.endWidth = 0.05f;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.startColor = lineRenderer.endColor = color;
         lineRenderer.useWorldSpace = true;
     }
 
